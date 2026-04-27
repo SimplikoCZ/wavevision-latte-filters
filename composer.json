@@ -4,7 +4,10 @@
   "type": "library",
   "license": "MIT",
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   },
   "autoload": {
     "psr-4": {
@@ -31,14 +34,33 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": "^8.4",
+    "latte/latte": "^3.0",
     "nette/http": "^3.0",
-    "wavevision/utils": "^2.1"
+    "wavevision/utils": "^3.0"
   },
   "require-dev": {
-    "php-coveralls/php-coveralls": "^2.1",
-    "wavevision/coding-standard": "^6.0",
-    "wavevision/di-service-annotation": "^4.0",
-    "wavevision/nette-tests": "^3.1"
-  }
+    "php-coveralls/php-coveralls": "^2.5",
+    "wavevision/coding-standard": "^7.0",
+    "wavevision/di-service-annotation": "^5.0",
+    "wavevision/nette-tests": "^4.0"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/SimplikoCZ/wavevision-di-service-annotation"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/SimplikoCZ/wavevision-utils"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/SimplikoCZ/wavevision-nette-tests"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/SimplikoCZ/wavevision-coding-standard"
+    }
+  ]
 }

@@ -38,10 +38,10 @@ class MtimeTest extends TestCase
 	private function createMtime(string $basePath): Mtime
 	{
 		$mtime = new Mtime(__DIR__);
-		$url = $this->createMock(UrlScript::class);
-		$url->expects($this->any())->method('getBasePath')->willReturn($basePath);
-		$request = $this->createMock(Request::class);
-		$request->expects($this->any())->method('getUrl')->willReturn($url);
+		$url = $this->createStub(UrlScript::class);
+		$url->method('getBasePath')->willReturn($basePath);
+		$request = $this->createStub(Request::class);
+		$request->method('getUrl')->willReturn($url);
 		$mtime->injectRequest($request);
 		$this->injectMtime($mtime);
 		return $mtime;

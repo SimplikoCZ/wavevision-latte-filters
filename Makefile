@@ -9,50 +9,67 @@ temp=temp
 tests=tests
 dirs:=$(src) $(tests)
 
+docker-bin=docker compose run --rm app
+docker-composer=$(docker-bin) composer
+
 all:
 	 @$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
+
+# Docker
+
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
 
 # Setup
 
 composer:
-	composer install
+	$(docker-composer) install
+
+update:
+	$(docker-composer) update
 
 reset:
 	rm -rf $(temp)/cache
-	composer dumpautoload
+	$(docker-composer) dumpautoload
 
 di: reset
-	bin/extract-services
+	$(docker-bin) bin/extract-services
 
 fix: reset check-syntax phpcbf phpcs phpstan test
 
 # QA
 
 check-syntax:
-	$(bin)/parallel-lint -e $(php) $(dirs)
+	$(docker-bin) $(bin)/parallel-lint -e $(php) $(dirs)
 
 phpcs:
-	$(bin)/phpcs -sp --standard=$(codeSnifferRuleset) --extensions=php $(dirs)
+	$(docker-bin) $(bin)/phpcs -sp --standard=$(codeSnifferRuleset) --extensions=php $(dirs)
 
 phpcbf:
-	$(bin)/phpcbf -spn --standard=$(codeSnifferRuleset) --extensions=php $(dirs) ; true
+	$(docker-bin) $(bin)/phpcbf -spn --standard=$(codeSnifferRuleset) --extensions=php $(dirs) ; true
 
 phpstan:
-	$(bin)/phpstan analyze $(dirs)
+	$(docker-bin) $(bin)/phpstan analyze $(dirs)
 
 # Tests
 
 test:
-	$(bin)/phpunit
+	$(docker-bin) $(bin)/phpunit
 
 test-coverage: reset
-	$(bin)/phpunit --coverage-html=$(coverage)
+	$(docker-bin) $(bin)/phpunit --coverage-html=$(coverage)
 
 test-coverage-clover: reset
-	$(bin)/phpunit --coverage-clover=$(coverageClover)
+	$(docker-bin) $(bin)/phpunit --coverage-clover=$(coverageClover)
 
 test-coverage-report: test-coverage-clover
-	$(bin)/php-coveralls --coverage_clover=$(coverageClover) --verbose
+	$(docker-bin) $(bin)/php-coveralls --coverage_clover=$(coverageClover) --verbose
 
 test-coverage-open: test-coverage
 ifndef chrome

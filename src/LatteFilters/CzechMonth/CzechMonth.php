@@ -8,6 +8,7 @@ use Wavevision\DIServiceAnnotation\DIService;
 /**
  * @DIService(generateInject=true)
  */
+#[DIService(generateInject: true)]
 class CzechMonth
 {
 

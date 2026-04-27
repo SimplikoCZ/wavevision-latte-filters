@@ -12,6 +12,7 @@ use function filemtime;
 /**
  * @DIService(generateInject=true, params={"%wwwDir%"})
  */
+#[DIService(generateInject: true, params: ['%wwwDir%'])]
 class Mtime
 {
 
